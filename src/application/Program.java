@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import model.Area;
 import model.Patient;
 
 public class Program {
@@ -14,7 +15,6 @@ public class Program {
 
         Scanner sc = new Scanner(System.in);
         List<Patient> patients = new ArrayList<>();
-
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         int option;
@@ -24,8 +24,10 @@ public class Program {
             System.out.println("1. Register patient");
             System.out.println("2. List patients");
             System.out.println("3. Update patient phone");
+            System.out.println("4. Remove patient");
             System.out.println("0. Exit");
             System.out.print("Option: ");
+            
             option = sc.nextInt();
             sc.nextLine();
 
@@ -44,25 +46,32 @@ public class Program {
                 System.out.print("Birth date (dd/MM/yyyy): ");
                 LocalDate birthDate = LocalDate.parse(sc.nextLine(), fmt);
 
-                Patient patient = new Patient(id, name, document, birthDate);
+                System.out.println("Choose area:");
+                for (int i = 0; i < Area.values().length; i++) {
+                    System.out.println((i + 1) + " - " + Area.values()[i]);
+                }
+
+                System.out.print("Option: ");
+                int areaOption = sc.nextInt();
+                sc.nextLine();
+
+                Area area = Area.values()[areaOption - 1];
+
+                Patient patient = new Patient(id, name, document, birthDate, area);
                 patients.add(patient);
 
                 System.out.println("Patient registered successfully!");
-
             }
-            
+
+
             else if (option == 2) {
-
-                System.out.println("\n--- PATIENT LIST ---");
-
                 if (patients.isEmpty()) {
                     System.out.println("No patients registered.");
                 } else {
-                    for (Patient p : patients) {
-                        System.out.println(p);
-                    }
+                    patients.forEach(System.out::println);
                 }
             }
+
 
             else if (option == 3) {
 
@@ -76,7 +85,7 @@ public class Program {
                         .orElse(null);
 
                 if (patient != null) {
-                    System.out.print("Enter phone number: ");
+                    System.out.print("Enter new phone: ");
                     String phone = sc.nextLine();
                     patient.updatePhone(phone);
                     System.out.println("Phone updated successfully!");
@@ -85,8 +94,33 @@ public class Program {
                 }
             }
 
+
+            else if (option == 4) {
+
+                System.out.print("Enter patient ID to remove: ");
+                int id = sc.nextInt();
+                sc.nextLine();
+
+                Patient patient = patients.stream()
+                        .filter(p -> p.getId() == id)
+                        .findFirst()
+                        .orElse(null);
+
+                if (patient != null) {
+                    if (patient.getArea() != Area.CENTER) {
+                        patients.remove(patient);
+                        System.out.println("Patient removed successfully (outside CENTER).");
+                    } else {
+                        System.out.println("Cannot remove patient: patient is inside CENTER area.");
+                    }
+                } else {
+                    System.out.println("Patient not found.");
+                }
+            }
+
         } while (option != 0);
 
         sc.close();
+        System.out.println("Program finished.");
     }
 }

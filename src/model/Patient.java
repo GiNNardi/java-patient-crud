@@ -10,8 +10,18 @@ public class Patient {
     private String document;
     private LocalDate birthDate;
     private String phone;
+    private Area area;
 
-    public Patient(int id, String name, String document, LocalDate birthDate) {
+
+    public Area getArea() {
+		return area;
+	}
+
+	public void setArea(Area area2) {
+		this.area = area2;
+	}
+
+	public Patient(int id, String name, String document, LocalDate birthDate, Area area) {
         this.id = id;
         this.name = name;
         this.document = document;
@@ -51,6 +61,7 @@ public class Patient {
         return "ID: " + id
                 + " | Name: " + name
                 + " | Age: " + getAge()
+                + " | Area: " + area
                 + " | Phone: " + (phone == null ? "Not informed" : phone);
     }
 }
