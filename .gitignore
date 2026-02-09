@@ -1,0 +1,11 @@
+# Ignorar pasta bin (arquivos compilados)
+bin/
+
+# Ignorar arquivos do sistema (Windows, Mac)
+.DS_Store
+Thumbs.db
+
+# Ignorar configuração local do Eclipse
+/.settings/
+/.project
+/.classpath

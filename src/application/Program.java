@@ -23,6 +23,7 @@ public class Program {
             System.out.println("\n--- *PATIENT CRUD* ---");
             System.out.println("1. Register patient");
             System.out.println("2. List patients");
+            System.out.println("3. Update patient phone");
             System.out.println("0. Exit");
             System.out.print("Option: ");
             option = sc.nextInt();
@@ -41,15 +42,16 @@ public class Program {
                 String document = sc.nextLine();
 
                 System.out.print("Birth date (dd/MM/yyyy): ");
-                String dateStr = sc.nextLine();
-                LocalDate birthDate = LocalDate.parse(dateStr, fmt);
+                LocalDate birthDate = LocalDate.parse(sc.nextLine(), fmt);
 
                 Patient patient = new Patient(id, name, document, birthDate);
                 patients.add(patient);
 
                 System.out.println("Patient registered successfully!");
 
-            } else if (option == 2) {
+            }
+            
+            else if (option == 2) {
 
                 System.out.println("\n--- PATIENT LIST ---");
 
@@ -59,6 +61,27 @@ public class Program {
                     for (Patient p : patients) {
                         System.out.println(p);
                     }
+                }
+            }
+
+            else if (option == 3) {
+
+                System.out.print("Enter patient ID: ");
+                int id = sc.nextInt();
+                sc.nextLine();
+
+                Patient patient = patients.stream()
+                        .filter(p -> p.getId() == id)
+                        .findFirst()
+                        .orElse(null);
+
+                if (patient != null) {
+                    System.out.print("Enter phone number: ");
+                    String phone = sc.nextLine();
+                    patient.updatePhone(phone);
+                    System.out.println("Phone updated successfully!");
+                } else {
+                    System.out.println("Patient not found.");
                 }
             }
 
